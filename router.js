@@ -9,13 +9,18 @@ module.exports = function(app) {
     })
     // 用户注册 为用户创建数据库,并记录用户到usersinfo里面
     app.get('/setusers',async (req,res) => {
-        list.connection.query('insert into blogpro.usersinfo(userid,userpassword) values (?,?)', [req.query.userid, req.query.password],err => {
+        list.connection.query('insert into blogpro.usersinfo(userid,userpassword,username,userinit) values (?,?,?,?)', [req.query.userid, req.query.password,req.query.username,req.query.userinit],err => {
             if(err){
                 res.send(false)
             }else {
                 res.send(true)
             }
         })
+    })
+    // 请求用户相关数据
+    app.get('/userinfo',async (req,res) => {
+        let allusers = await list.list(`select * from blogpro.usersinfo where userid=${req.query.userid}`)
+        res.send(allusers)
     })
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
