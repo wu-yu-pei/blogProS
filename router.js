@@ -1,3 +1,4 @@
+const { query } = require('express')
 let list = require('./mysql.js')
 
 module.exports = function(app) {
@@ -7,6 +8,7 @@ module.exports = function(app) {
         let allusers = await list.list(`select * from blogpro.usersinfo where userid=${req.query.userid} and userpassword="${req.query.password}"`)
         res.send(allusers)
     })
+
     // 用户注册 为用户创建数据库,并记录用户到usersinfo里面
     app.get('/setusers',async (req,res) => {
         list.connection.query('insert into blogpro.usersinfo(userid,userpassword,username,userinit) values (?,?,?,?)', [req.query.userid, req.query.password,req.query.username,req.query.userinit],err => {
@@ -17,11 +19,21 @@ module.exports = function(app) {
             }
         })
     })
+
     // 请求用户相关数据
     app.get('/userinfo',async (req,res) => {
         let allusers = await list.list(`select * from blogpro.usersinfo where userid=${req.query.userid}`)
         res.send(allusers)
     })
+
+    // 请求用户所有文章
+    app.get('/userallactive',async (req,res) => {
+        // 按时间排序
+        let userallactive = await list.list(`SELECT * FROM blogpro.acticle,blogpro.acticleinfo where userphone=${req.query.phone} and blogpro.acticle.acticleid = blogpro.acticleinfo.acticleinfoid order by acticleinfotime desc`)
+        // console.log(userallactive);
+        res.send(userallactive)
+    })
+    
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
     //     let arrs =  await list.list("SELECT * FROM blog.myblog  order by Myblogtime desc")
