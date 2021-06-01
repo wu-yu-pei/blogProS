@@ -16,7 +16,7 @@ connection.connect(err => {
     if(err) {
         console.log(err);
     }else {
-        console.log("连接成功");
+        console.log("数据库连接成功····✈····🚆");
     }
 })
 

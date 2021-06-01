@@ -33,7 +33,25 @@ module.exports = function(app) {
         // console.log(userallactive);
         res.send(userallactive)
     })
-    
+
+    //请求用户的指定文章
+    app.get('/useraticle',async (req,res) => {
+        // console.log(req.query);
+        let useraticle = await list.list(`SELECT * FROM blogpro.acticle,blogpro.acticleinfo where userphone=${req.query.phone} and blogpro.acticle.acticleid = blogpro.acticleinfo.acticleinfoid and blogpro.acticle.acticleid = "${req.query.id}"`)
+        res.send(useraticle)
+    }) 
+
+    //修改用户数据
+    app.get('/change',async (req,res) => {
+            list.connection.query(`update blogpro.acticleinfo set acticleinfobody = ?,  acticleinfotime = ? where acticleinfoid = ? `, [req.query.body,req.query.time,req.query.id],err => {
+            if(err) {
+                console.log(err);
+            }else {
+                // console.log('Ok');
+                res.send('ok')
+            }
+        })
+    })
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
     //     let arrs =  await list.list("SELECT * FROM blog.myblog  order by Myblogtime desc")
