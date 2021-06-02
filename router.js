@@ -52,6 +52,32 @@ module.exports = function(app) {
             }
         })
     })
+    // 提交blog
+    app.get('/write', (req,res) => {
+            list.connection.query('insert into blogpro.acticle(userphone,acticleid) values (?,?)', [req.query.phone, req.query.id],err => {
+                if(err) {
+                    console.log(err);
+                }else {
+                    res.send('ok')
+                }
+            })
+    })
+    app.get('/writeinfo', (req,res) => {
+        let id = req.query.id
+        let title = req.query.title
+        let time = req.query.time
+        let body = req.query.body
+        let readcount = req.query.readcount
+        let likecount = req.query.likecount
+        let type = req.query.type
+            list.connection.query('insert into blogpro.acticleinfo(acticleinfoid,acticleinfotitle,acticleinfotime,acticleinfobody,acticleinforeadcount,acticleinfolikecount,acticleinfocol) values (?,?,?,?,?,?,?)', [id, title,time,body,readcount,likecount,type],err => {
+                if(err) {
+                    console.log(err);
+                }else {
+                    res.send('ok')
+                }
+            })
+    })
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
     //     let arrs =  await list.list("SELECT * FROM blog.myblog  order by Myblogtime desc")
