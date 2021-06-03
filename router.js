@@ -1,4 +1,4 @@
-const { query } = require('express')
+const { query, json } = require('express')
 let list = require('./mysql.js')
 
 module.exports = function(app) {
@@ -37,17 +37,17 @@ module.exports = function(app) {
     //请求用户的指定文章
     app.get('/useraticle',async (req,res) => {
         // console.log(req.query);
-        let useraticle = await list.list(`SELECT * FROM blogpro.acticle,blogpro.acticleinfo where userphone=${req.query.phone} and blogpro.acticle.acticleid = blogpro.acticleinfo.acticleinfoid and blogpro.acticle.acticleid = "${req.query.id}"`)
+        // let useraticle = await list.list(`SELECT * FROM blogpro.acticle,blogpro.acticleinfo where userphone=${req.query.phone} and blogpro.acticle.acticleid = blogpro.acticleinfo.acticleinfoid and blogpro.acticle.acticleid = "${req.query.id}"`)
+        let useraticle = await list.list(`SELECT * FROM blogpro.acticleinfo where  blogpro.acticleinfo.acticleinfoid ="${req.query.id}"`)
         res.send(useraticle)
     }) 
 
     //修改用户数据
     app.get('/change',async (req,res) => {
-            list.connection.query(`update blogpro.acticleinfo set acticleinfobody = ?,  acticleinfotime = ? where acticleinfoid = ? `, [req.query.body,req.query.time,req.query.id],err => {
+            list.connection.query(`update blogpro.acticleinfo set acticleinfobody = ?,  acticleinfotime = ? , acticleinfotitle = ?, acticleinfocol = ? where acticleinfoid = ? `, [req.query.body,req.query.time,req.query.title,req.query.type,req.query.id],err => {
             if(err) {
                 console.log(err);
             }else {
-                // console.log('Ok');
                 res.send('ok')
             }
         })
@@ -76,7 +76,31 @@ module.exports = function(app) {
                 }else {
                     res.send('ok')
                 }
-            })
+        })
+    })
+    // 请求所有用户的文章
+    app.get('/alluseracticle',async (req,res) => {
+        let allusersacticle = await list.list(`SELECT * FROM blogpro.acticleinfo order by acticleinfotime desc`)
+        res.send(allusersacticle)
+    })
+    // 查询用户信息
+    app.get('/searchuser',async (req,res) => {
+        let user = await list.list(`SELECT * FROM blogpro.usersinfo,blogpro.acticle,blogpro.acticleinfo where blogpro.acticleinfo.acticleinfoid = "${req.query.id}" and blogpro.acticleinfo.acticleinfoid=blogpro.acticle.acticleid and  blogpro.acticle.userphone = blogpro.usersinfo.userid`)
+        res.send(user)
+    })
+    // 点赞接口
+    app.get('/getlikecount',async (req,res) => {
+        let count = await list.list(`SELECT acticleinfolikecount FROM blogpro.acticleinfo where acticleinfoid="${req.query.id}"`)
+        res.send(count)
+    })
+    app.get('/setlikecount', (req,res) => {
+        list.connection.query(`update blogpro.acticleinfo set acticleinfolikecount = ? where acticleinfoid = ? `, [req.query.count,req.query.id],err => {
+            if(err) {
+                console.log(err);
+            }else {
+                res.send('ok')
+            }
+        })
     })
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
