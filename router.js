@@ -102,6 +102,47 @@ module.exports = function(app) {
             }
         })
     })
+    // 首页所有分类
+    app.get('/qianduan',async (req,res) => {
+        let qianduan = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol in("前端","JavaScript","Vue","React","Html","Css")  order by acticleinfotime desc`)
+        res.send(qianduan)
+    })
+    app.get('/houduan',async (req,res) => {
+        let houduan = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol in ("后端","C++","Java","node.js")  order by acticleinfotime desc`)
+        res.send(houduan)
+    })
+    app.get('/vue',async (req,res) => {
+        let vue = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="Vue"  order by acticleinfotime desc`)
+        res.send(vue)
+    })
+    app.get('/react',async (req,res) => {
+        let react = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="React"  order by acticleinfotime desc`)
+        res.send(react)
+    })
+    app.get('/css',async (req,res) => {
+        let css = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="Css"  order by acticleinfotime desc`)
+        res.send(css)
+    })
+    app.get('/html',async (req,res) => {
+        let html = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="Html"  order by acticleinfotime desc`)
+        res.send(html)
+    })
+    app.get('/java',async (req,res) => {
+        let java = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="Java"  order by acticleinfotime desc`)
+        res.send(java)
+    })
+    app.get('/node',async (req,res) => {
+        let node = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="node.js"  order by acticleinfotime desc`)
+        res.send(node)
+    })
+    app.get('/javascript',async (req,res) => {
+        let qianduan = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="JavaScript"  order by acticleinfotime desc`)
+        res.send(qianduan)
+    })
+    app.get('/c',async (req,res) => {
+        let c = await list.list(`SELECT * FROM blogpro.acticleinfo where acticleinfocol="C++"  order by acticleinfotime desc`)
+        res.send(c)
+    })
     // // 获取数据库里所有博客展示并且 按照时间排序
     // app.get('/blog',async(req,res) => {
     //     let arrs =  await list.list("SELECT * FROM blog.myblog  order by Myblogtime desc")
