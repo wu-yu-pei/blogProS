@@ -165,6 +165,21 @@ module.exports = function(app) {
             }
         })
     })
+    // 评论接口
+    app.get('/comment',(req,res) => {
+        list.connection.query('insert into blogpro.commentinfo(acticleid,selfid,content,time) values (?,?,?,?)', [req.query.acticleid, req.query.selfid,req.query.content,req.query.time],err => {
+            if(err){
+                res.send(false)
+            }else {
+                res.send(true)
+            }
+        })
+    })
+    // 查询评论接口
+    app.get("/searchcomment",async (req,res) => {
+            var allcomment = await list.list(`SELECT * FROM blogpro.commentinfo where acticleid="${req.query.id}"  order by time desc`)
+            res.send(allcomment)
+    })
     // 查询评论接口
     // 设置评论接口
 }
